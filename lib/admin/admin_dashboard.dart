@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'add_match_screen.dart';
 import 'add_team_screen.dart';
@@ -35,88 +36,77 @@ class _AdminDashboardState extends State<AdminDashboard> {
         children: [
 
           // Dashboard Card
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          StreamBuilder<QuerySnapshot>(
+  stream: FirebaseFirestore.instance
+      .collection('matches')
+      .snapshots(),
+  builder: (context, snapshot) {
+    if (!snapshot.hasData) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
-                Text(
-                  "Dashboard",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+    final docs = snapshot.data!.docs;
 
-                SizedBox(height: 20),
+    final total = docs.length;
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+    final live = docs.where((e) {
+      final data = e.data() as Map<String, dynamic>;
+      return data['status'] == "Live";
+    }).length;
 
-                    Column(
-                      children: [
-                        Text(
-                          "0",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Total Matches",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
+    final upcoming = docs.where((e) {
+      final data = e.data() as Map<String, dynamic>;
+      return data['status'] == "Upcoming";
+    }).length;
 
-                    Column(
-                      children: [
-                        Text(
-                          "0",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Live",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
+    final finished = docs.where((e) {
+      final data = e.data() as Map<String, dynamic>;
+      return data['status'] == "Finished";
+    }).length;
 
-                    Column(
-                      children: [
-                        Text(
-                          "0",
-                          style: TextStyle(
-                            color: Colors.amber,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Upcoming",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
 
-                  ],
-                ),
-              ],
+          const Text(
+            "Dashboard",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
 
+          const SizedBox(height: 20),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+
+              buildStat("Total", total, Colors.white),
+
+              buildStat("Live", live, Colors.red),
+
+              buildStat("Upcoming", upcoming, Colors.amber),
+
+              buildStat("Finished", finished, Colors.blue),
+
+            ],
+          ),
+        ],
+      ),
+    );
+  },
+),
+                            
           const SizedBox(height: 30),
 
           buildMenu(
@@ -193,32 +183,28 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  Widget buildMenu(
-    BuildContext context,
-    IconData icon,
-    String title,
-    Color color,
-    VoidCallback onTap,
-  ) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 15),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color,
-          child: Icon(
-            icon,
-            color: Colors.white,
-          ),
+  Widget buildStat(
+  String title,
+  int value,
+  Color color,
+) {
+  return Column(
+    children: [
+      Text(
+        value.toString(),
+        style: TextStyle(
+          color: color,
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
         ),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios),
-        onTap: onTap,
       ),
-    );
-  }
+      Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    ],
+  );
+}
 }
