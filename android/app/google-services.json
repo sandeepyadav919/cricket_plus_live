@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "545150302344",
+    "project_id": "cricket-plus-live",
+    "storage_bucket": "cricket-plus-live.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545150302344:android:12533aeb6abe2d635fc73d",
+        "android_client_info": {
+          "package_name": "com.example.cricket_plus_live"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC__sWz-dFG2a8glJMJYanl1MQgcKbqu_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
