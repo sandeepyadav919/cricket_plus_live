@@ -1,13 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/match_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Stream<QuerySnapshot> getMatches() {
+  Stream<List<MatchModel>> getMatches() {
     return _db
         .collection('matches')
         .orderBy('createdAt', descending: true)
-        .snapshots();
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs.map((doc) {
+            return MatchModel.fromMap(
+              doc.id,
+              doc.data(),
+            );
+          }).toList(),
+        );
   }
 
   Future<void> deleteMatch(String id) async {
@@ -15,9 +24,11 @@ class FirestoreService {
   }
 
   Future<void> updateMatch(
-    String id,
-    Map<String, dynamic> data,
+    MatchModel match,
   ) async {
-    await _db.collection('matches').doc(id).update(data);
+    await _db
+        .collection('matches')
+        .doc(match.id)
+        .update(match.toMap());
   }
 }
