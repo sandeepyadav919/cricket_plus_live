@@ -72,6 +72,26 @@ class _AddMatchScreenState extends State<AddMatchScreen> {
     labelText: "Team A Score (e.g. 145/4)",
   ),
 ),
+Column(
+  children: [
+    Text(
+      match.teamA,
+      style: const TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    const SizedBox(height: 5),
+    Text(
+      match.teamAScore,
+      style: const TextStyle(
+        fontSize: 18,
+        color: Colors.green,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+),
 
 TextField(
   controller: _teamBScoreController,
@@ -79,12 +99,51 @@ TextField(
     labelText: "Team B Score (e.g. 140/8)",
   ),
 ),
+Column(
+  children: [
+    Text(
+      match.teamA,
+      style: const TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    const SizedBox(height: 5),
+    Text(
+      match.teamAScore,
+      style: const TextStyle(
+        fontSize: 18,
+        color: Colors.green,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+),
 
 TextField(
   controller: _oversController,
   decoration: const InputDecoration(
     labelText: "Overs (e.g. 18.2)",
   ),
+),
+const SizedBox(height: 10),
+
+Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    const Icon(
+      Icons.timer,
+      color: Colors.orange,
+      size: 18,
+    ),
+    const SizedBox(width: 5),
+    Text(
+      "Overs: ${match.overs}",
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
 ),
             TextField(
               controller: _statusController,

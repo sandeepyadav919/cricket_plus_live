@@ -19,9 +19,12 @@ class FirestoreService {
         );
   }
 
-  Future<void> deleteMatch(String id) async {
-    await _db.collection('matches').doc(id).delete();
-  }
+ Future<void> deleteMatch(String id) async {
+  await FirebaseFirestore.instance
+      .collection('matches')
+      .doc(id)
+      .delete();
+}
 
   Future<void> updateMatch(
     MatchModel match,
